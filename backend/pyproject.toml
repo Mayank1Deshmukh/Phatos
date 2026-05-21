@@ -1,0 +1,8 @@
+[tool.vercel]
+builds = [
+  { src = "backend/main.py", use = "@vercel/python" }
+]
+routes = [
+  { src = "/predict", dest = "backend/main.py" }
+]
+ 
