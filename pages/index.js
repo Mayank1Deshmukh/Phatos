@@ -1,55 +1,85 @@
 import { useState } from "react";
 
+const PAINTING_ID = 1;   // hardcoded for now; later comes from route/props
+
 export default function Home() {
-  const [file, setFile] = useState(null);
-  const [results, setResults] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [file,          setFile]          = useState(null);
+  const [aiResults,     setAiResults]     = useState(null);
+  const [crowdStats,    setCrowdStats]    = useState(null);
+  const [guessEmotion,  setGuessEmotion]  = useState("");
+  const [submitted,     setSubmitted]     = useState(false);
+  const [loading,       setLoading]       = useState(false);
 
-  async function handleAnalyze() {
-    if (!file) return alert("Please select an image first.");
+  // 1. User submits their emotion guess BEFORE seeing AI result
+  async function handleGuess() {
+    if (!guessEmotion) return alert("Pick an emotion first.");
+    await fetch("/api/annotate", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ painting_id: PAINTING_ID, guessed_emotion: guessEmotion }),
+    });
+    setSubmitted(true);
 
-    // For now, use a test URL. Later you can upload the file to storage
-    // and use the returned URL instead.
-    const testUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/800px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg";
-
+    // 2. Now fetch AI prediction + crowd stats in parallel
     setLoading(true);
-    setResults(null);
+    const testUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg";
 
-    try {
-      const res = await fetch("/api/predict", {
-        method: "POST",
+    const [predictRes, statsRes] = await Promise.all([
+      fetch("/api/predict", {
+        method:  "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image_url: testUrl }),
-      });
-      const data = await res.json();
-      setResults(data.predictions);
-    } catch (err) {
-      setResults([{ emotion: "Error", confidence: err.message }]);
-    } finally {
-      setLoading(false);
-    }
+        body:    JSON.stringify({ image_url: testUrl }),
+      }),
+      fetch(`/api/annotate?painting_id=${PAINTING_ID}`),
+    ]);
+
+    setAiResults((await predictRes.json()).predictions);
+    setCrowdStats(await statsRes.json());
+    setLoading(false);
   }
 
   return (
     <div>
       <h1>Computational Aesthetics</h1>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => setFile(e.target.files[0])}
-      />
-      <button onClick={handleAnalyze} disabled={loading}>
-        {loading ? "Analyzing…" : "Analyze Emotion"}
-      </button>
 
-      <div>
-        {results &&
-          results.map((r) => (
-            <p key={r.emotion}>
-              {r.emotion}: {r.confidence}
-            </p>
+      <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
+
+      {/* Step 1 – human guess */}
+      {!submitted && (
+        <div>
+          <p>What emotion does this painting express?</p>
+          <select value={guessEmotion} onChange={(e) => setGuessEmotion(e.target.value)}>
+            <option value="">-- pick one --</option>
+            {["joy","sadness","fear","anger","awe","calmness","disgust","surprise"].map(e => (
+              <option key={e} value={e}>{e}</option>
+            ))}
+          </select>
+          <button onClick={handleGuess}>Submit guess & Analyze</button>
+        </div>
+      )}
+
+      {loading && <p>Loading AI prediction…</p>}
+
+      {/* Step 2 – reveal AI result + crowd stats */}
+      {submitted && !loading && (
+        <div>
+          <h2>AI Prediction</h2>
+          {aiResults?.map(r => (
+            <p key={r.emotion}>{r.emotion}: {r.confidence}</p>
           ))}
-      </div>
+
+          <h2>Crowd Stats</h2>
+          {crowdStats && (
+            <div>
+              <p>Total votes: {crowdStats.total_votes}</p>
+              <p>Top label:   {crowdStats.top_label}</p>
+              {Object.entries(crowdStats.label_counts).map(([emotion, count]) => (
+                <p key={emotion}>{emotion}: {count}</p>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
