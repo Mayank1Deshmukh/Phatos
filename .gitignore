@@ -4,5 +4,5 @@ venv-phatos/
 node_modules/
 .vscode
 .next
-backend/sanity.py
 backend/paintings_metadata.json
+backend/model_config.json
