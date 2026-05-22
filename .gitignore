@@ -1,0 +1,6 @@
+.vercel
+.env*
+venv-phatos/
+node_modules/
+.vscode
+.next

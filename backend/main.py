@@ -1,7 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional
-import requests, base64, io
+import requests
+import base64
+import io
 from PIL import Image
 import numpy as np
 import torch
@@ -188,7 +190,8 @@ def explain(req: ExplainRequest):
 
 
 # ── FAISS search ──────────────────────────────────────────────────────────────
-import json, faiss
+import json 
+import faiss
 from pathlib import Path
 from functools import lru_cache
 

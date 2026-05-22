@@ -1,8 +1,10 @@
 [tool.vercel]
+entrypoint = "backend.main:app"
+
 builds = [
   { src = "backend/main.py", use = "@vercel/python" }
 ]
+
 routes = [
-  { src = "/predict", dest = "backend/main.py" }
+  { src = "/api/(.*)", dest = "backend/main.py" }
 ]
- 
