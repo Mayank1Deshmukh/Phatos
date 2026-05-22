@@ -45,10 +45,15 @@ export default function Home() {
         body:    JSON.stringify({ image_b64: imageB64 }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        alert(`Server error ${res.status}: ${data.detail ?? JSON.stringify(data)}`);
+        setLoading(false);
+        return;
+      }
       setResult(data);
       setStep("result");
-    } catch {
-      alert("Something went wrong — check the console.");
+    } catch (err) {
+      alert(`Something went wrong — ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -121,11 +126,14 @@ export default function Home() {
             </div>
             <div style={s.col}>
               <p style={s.label}>Saliency heatmap</p>
-              <img
-                src={`data:image/png;base64,${result.heatmap_overlay}`}
-                alt="heatmap"
-                style={s.img}
-              />
+              {result.heatmap_overlay
+                ? <img
+                    src={`data:image/png;base64,${result.heatmap_overlay}`}
+                    alt="heatmap"
+                    style={s.img}
+                  />
+                : <p style={{ color: "#999" }}>Heatmap unavailable</p>
+              }
             </div>
           </div>
 
@@ -135,11 +143,13 @@ export default function Home() {
             <p style={s.emotion}>
               {result.emotion}&nbsp;
               <span style={{ fontSize: 16, fontWeight: 400, color: "#555" }}>
-                ({(result.confidence * 100).toFixed(1)}% confidence)
+                {result.confidence != null
+                  ? `(${(result.confidence * 100).toFixed(1)}% confidence)`
+                  : ""}
               </span>
             </p>
             <div style={s.bar_wrap}>
-              <div style={s.bar(result.confidence * 100)} />
+              <div style={s.bar((result.confidence ?? 0) * 100)} />
             </div>
             <p style={{ color: "#555", fontSize: 14 }}>
               Your guess: <strong>{guessEmotion}</strong>
