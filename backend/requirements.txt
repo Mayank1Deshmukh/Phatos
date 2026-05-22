@@ -1,9 +1,3 @@
 fastapi
 uvicorn
-transformers
-torch
-Pillow
-requests
-numpy
-faiss-cpu
-umap-learn
+httpx

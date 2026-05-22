@@ -1,28 +1,23 @@
-"""
-Run once locally to build painting_emotion_index.faiss from paintings_metadata.json.
-  python build_index.py
-"""
-import json, numpy as np, faiss
+import json
 from pathlib import Path
-from transformers import AutoModelForImageClassification
 
-MODEL_ID = "SlashHash/Painting_Emotion_Classifier"
-model    = AutoModelForImageClassification.from_pretrained(MODEL_ID)
+import faiss
+import numpy as np
 
-EMOTION_LABELS = list(model.config.id2label.values())
-EMBED_DIM      = len(EMOTION_LABELS)
+BASE_DIR = Path(__file__).resolve().parent
+metadata = json.loads((BASE_DIR / "paintings_metadata.json").read_text(encoding="utf-8"))
+model_config = json.loads((BASE_DIR / "model_config.json").read_text(encoding="utf-8"))
 
-metadata = json.loads(Path("paintings_metadata.json").read_text())
+emotion_labels = model_config["emotions"]
+embed_dim = len(emotion_labels)
 
-# Build one one-hot vector per painting based on its dominant emotion
-vectors = np.zeros((len(metadata), EMBED_DIM), dtype=np.float32)
+vectors = np.zeros((len(metadata), embed_dim), dtype=np.float32)
 for i, painting in enumerate(metadata):
     emotion = painting["emotion_dominant"]
-    if emotion in EMOTION_LABELS:
-        vectors[i, EMOTION_LABELS.index(emotion)] = 1.0
+    if emotion in emotion_labels:
+        vectors[i, emotion_labels.index(emotion)] = 1.0
 
-# Flat L2 index (exact search, fine for small datasets)
-index = faiss.IndexFlatL2(EMBED_DIM)
+index = faiss.IndexFlatL2(embed_dim)
 index.add(vectors)
-faiss.write_index(index, "painting_emotion_index.faiss")
-print(f"Built index with {index.ntotal} paintings, dim={EMBED_DIM}")
+faiss.write_index(index, str(BASE_DIR / "painting_emotion_index.faiss"))
+print(f"Built index with {index.ntotal} paintings, dim={embed_dim}")

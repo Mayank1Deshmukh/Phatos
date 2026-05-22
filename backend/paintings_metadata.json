@@ -5,7 +5,7 @@
     "artist": "Vincent van Gogh",
     "year": 1889,
     "movement": "Post-Impressionism",
-    "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
+    "thumbnail_url": "C:\\Users\\mayan\\Documents\\Mentor Practice Projects\\Phatos\\static\\starry_night.jpg",
     "emotion_dominant": "awe"
   },
   {
@@ -14,7 +14,7 @@
     "artist": "Edvard Munch",
     "year": 1893,
     "movement": "Expressionism",
-    "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/800px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg",
+    "thumbnail_url": "C:\\Users\\mayan\\Documents\\Mentor Practice Projects\\Phatos\\static\\the_scream.jpg",
     "emotion_dominant": "fear"
   },
   {
@@ -23,8 +23,8 @@
     "artist": "Johannes Vermeer",
     "year": 1665,
     "movement": "Baroque",
-    "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/800px-1665_Girl_with_a_Pearl_Earring.jpg",
-    "emotion_dominant": "calmness"
+    "thumbnail_url": "C:\\Users\\mayan\\Documents\\Mentor Practice Projects\\Phatos\\static\\Girl_with_a_Pearl_Earring.jpg",
+    "emotion_dominant": "contentment"
   },
   {
     "id": 3,
@@ -32,8 +32,8 @@
     "artist": "Pierre-Auguste Renoir",
     "year": 1876,
     "movement": "Impressionism",
-    "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Auguste_Renoir_-_Dance_at_Le_Moulin_de_la_Galette.jpg/1280px-Auguste_Renoir_-_Dance_at_Le_Moulin_de_la_Galette.jpg",
-    "emotion_dominant": "joy"
+    "thumbnail_url": "C:\\Users\\mayan\\Documents\\Mentor Practice Projects\\Phatos\\static\\Dance_at_Le_Moulin_de_la_Galette.jpg",
+    "emotion_dominant": "amusement"
   },
   {
     "id": 4,
@@ -41,7 +41,7 @@
     "artist": "Francisco Goya",
     "year": 1823,
     "movement": "Romanticism",
-    "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Francisco_de_Goya%2C_Saturno_devorando_a_su_hijo_%281819-1823%29.jpg/800px-Francisco_de_Goya%2C_Saturno_devorando_a_su_hijo_%281819-1823%29.jpg",
+    "thumbnail_url": "C:\\Users\\mayan\\Documents\\Mentor Practice Projects\\Phatos\\static\\saturn_devouring_his_son.jpg",
     "emotion_dominant": "fear"
   }
 ]
